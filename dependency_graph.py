@@ -15,8 +15,9 @@ valid_extensions = valid_headers[0] + valid_sources[0]
 def normalize(path):
 	""" Return the name of the node that will represent the file at path. """
 	filename = os.path.basename(path)
-	end = filename.rfind('.')
-	end = end if end != -1 else len(filename)
+	#end = filename.rfind('.')
+	#end = end if end != -1 else len(filename)
+	end = len(filename)
 	return filename[:end]
 
 def get_extension(path):
