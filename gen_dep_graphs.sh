@@ -7,6 +7,7 @@ base_dir="."
 cleanup=false
 dry_run=false
 echo_cmd=false
+find_cycles=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -37,11 +38,11 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     # `gen_dep_graphs.sh` options
-	-b)
-	  base_dir="$2"
-	  shift
-	  shift
-	  ;;
+    -b)
+      base_dir="$2"
+      shift
+      shift
+      ;;
     -d)
       dry_run=true
       shift
@@ -50,11 +51,15 @@ while [[ $# -gt 0 ]]; do
       echo_cmd=true
       shift
       ;;
-	--cleanup)
-	  dep_args+="$1 "
-	  cleanup=true
-	  shift
-	  ;;
+    --find-cycles)
+      find_cycles=true
+      shift
+      ;;
+    --cleanup)
+      dep_args+="$1 "
+      cleanup=true
+      shift
+      ;;
     -*|--*)
       echo "Unknown option \"$1\""
       exit 1
@@ -71,6 +76,11 @@ dir_args=`echo ${dir_args} | xargs`
 
 #echo "dep_args = \"${dep_args}\""
 #echo "dir_args = \"${dir_args}\""
+
+if [[ ${cleanup} = true && ${find_cycles} = true ]]; then
+  echo "Options \"--cleanup\" and \"--find-cycles\" are mutually exclusive"
+  exit 1
+fi
 
 for dir in ${dir_args} ; do
   if test -d ${dir}; then
@@ -93,5 +103,9 @@ for dir in ${dir_args} ; do
   fi
   if [ ${cleanup} = false ]; then
     mv ${out}_deps ${out}_deps.dot
+    if [ ${find_cycles} = true ]; then
+      echo "Finding cycles in \"${out}_deps.dot\""
+      ${base_dir}/find_cycles.py ${out}_deps.dot
+    fi
   fi
 done
