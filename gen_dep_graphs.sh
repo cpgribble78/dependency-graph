@@ -4,6 +4,7 @@ dep_args=""
 dir_args=""
 
 base_dir="."
+cleanup=false
 dry_run=false
 echo_cmd=false
 
@@ -49,6 +50,11 @@ while [[ $# -gt 0 ]]; do
       echo_cmd=true
       shift
       ;;
+	--cleanup)
+	  dep_args+="$1 "
+	  cleanup=true
+	  shift
+	  ;;
     -*|--*)
       echo "Unknown option \"$1\""
       exit 1
@@ -84,5 +90,8 @@ for dir in ${dir_args} ; do
     fi
   else
     echo "\"${dir}\" is not a directory"
+  fi
+  if [ ${cleanup} = false ]; then
+    mv ${out}_deps ${out}_deps.dot
   fi
 done
