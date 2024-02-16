@@ -2,6 +2,8 @@
 
 dep_args=""
 dir_args=""
+
+base_dir="."
 dry_run=false
 echo_cmd=false
 
@@ -34,6 +36,11 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     # `gen_dep_graphs.sh` options
+	-b)
+	  base_dir="$2"
+	  shift
+	  shift
+	  ;;
     -d)
       dry_run=true
       shift
@@ -67,7 +74,7 @@ for dir in ${dir_args} ; do
     out="${dir}"
     fi
     echo "Generating dependency graph for \"${dir}/\""
-    cmd="python dependency_graph.py ${dep_args} ${dir} ${out}_deps"
+    cmd="python ${base_dir}/dependency_graph.py ${dep_args} ${dir} ${out}_deps"
     if [ ${echo_cmd} = true ]; then
       echo "--> ${cmd}"
       echo ""
