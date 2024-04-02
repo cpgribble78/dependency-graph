@@ -1,3 +1,17 @@
+# cpg version
+
+Download, install Graphviz on Windows 11
+
+```
+pip install -r requirements.txt
+gen_dep_graphs.sh cpg_test
+```
+
+```
+pip install networkx pydot pydotplus
+find_cycles.py cpg_test_deps.dot
+```
+
 # dependency-graph
 
 A python script to show the "include" dependency of C++ classes.
